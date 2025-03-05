@@ -115,6 +115,5 @@ With this configuration:
 
 This firewall setup significantly enhances server security while allowing essential services to operate. 
 
-
 ---
 
