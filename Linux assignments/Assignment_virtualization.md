@@ -377,10 +377,11 @@ Onced  LXD is installed and initialized, I can start using it to create and mana
 
 - Delete a container:
       - To delete a container.
-      ```
-       lxc delete my-container
-       ```
-       Screenshot of powershell:
+
+    ```
+    lxc delete my-container
+    ```
+- Screenshot of powershell:
 
      ![alt text](1lxd_2.png)
 
@@ -398,6 +399,182 @@ Onced  LXD is installed and initialized, I can start using it to create and mana
 
       lxc config set my-container limits.memory 512MB
 
+
+#
+# Part 4 : Stick Apps with docker
+
+**Docker is a powerful platform for building, deploying, and managing containerized applications. Containers allow you to package an application with all its dependencies, ensuring consistency across different environments.**
+
+
+## 1. Installation:
+- Docker Desktop (as i am beginner, i tried on windows and download from following link)
+     - [ Docker's official website](https://www.docker.com/products/docker-desktop/)
+- Docker Engine (for Linux)  
+     - I followed the [ official installation guide.](https://docs.docker.com/engine/install//)   
+
+- On Ubuntu based systems, i used this code install Docker Engine: 
+     ```
+     sudo apt update
+     sudo apt install docker.io -y
+     sudo systemctl enable --now docker
+     ```  
+
+- To verify installation:
+     ```
+     docker --version
+     ```  
+- Screenshot:
+![alt text](docker1.png)
+## 2. Understanding Basic Docker Concepts:
+- Before diving in, first i understand these key terms:
+
+    Images: Blueprint for containers (e.g., nginx, python:3.9).
+
+    Containers: Running instances of images (isolated processes).
+
+   Dockerfile: A script to build custom images.
+
+   Docker Hub: A registry for public/private images (like GitHub for containers).
+
+## 3. Experiment with Docker:
+
+- I followed the "Docker Workshop" to get hand-on experience with docker.
+
+- Links
+
+  [ Docker Workshop](https://docs.docker.com/get-started/workshop/)
+## 1. To check running Docker service:
+
+```
+systemctl status docker  # (Linux)
+
+```
+
+### Screenshot:
+![alt text](docker2.png)
+
+## 2. List running containers:
+```
+docker ps
+```
+## 3. Stop a container:
+```
+docker stop <container_id>
+```
+## 4. Remove a container:
+```
+docker rm <container_id>
+```
+## 5. Build an image using a Dockerfile:
+   - Create a Dockerfile:
+   ```
+   sql
+   FROM ubuntu:latest
+   RUN apt update && apt install -y curl
+   CMD ["bash"]
+
+   ```
+   - Build the image:
+   ```
+   docker build -t myubuntu .
+   ```
+   - Run a container from the image:
+   ```
+   docker run -it myubuntu
+   ```
+
+#
+# Part 5 : Snaps for Self-Contained Applications: 
+
+**Snaps are containerized software packages that bundle an application and its dependencies, ensuring consistent behavior across different Linux distributions. They are managed by Snapcraft and distributed via the Snap Store.**
+
+## 1. Research: Understanding Snaps & Snapcraft:
+ ### Key Concepts:
+
+- Snap: A compressed, sandboxed application package with auto-updates.
+
+- Snapcraft: The tool used to build and publish snaps.
+
+- Snap Store: A repository for distributing snaps (like an app store).
+
+- Confinement:
+
+     - Strict: Restricted access (default).
+
+     - Devmode: Bypasses security for testing.
+
+     - Classic: Full system access (like traditional packages).
+
+### Advantages of Snaps:
+- Works across Ubuntu, Debian, Fedora, Arch, and more.
+- Automatic updates.
+- Dependency isolation (no "DLL hell").
+
+### Disadvantages:
+- Larger file size (due to bundled dependencies).
+- Slower startup (due to sandboxing). 
+
+### Sources:
+
+[Snapcraft Official Docs](https://snapcraft.io/docs)
+
+[Ubuntu Snap Tutorial](https://ubuntu.com/tutorials/create-your-first-snap#1-overview)
+
+## 2. Experiment: Packaging an App as a Snap:
+
+### Step 1: I Install Snap & Snapcraft:
+```
+sudo apt update  
+sudo apt install snapd snapcraft   
+sudo systemctl enable --now snapd.socket  
+```
+### Step 2: I Created a Simple Snap (Example: Hello-World Python App):
+   - Set up a project folder:
+```
+mkdir my-snap-app && cd my-snap-app  
+mkdir src  
+echo 'print("Hello, Snap!")' > src/hello.py  
+```
+   - Create snapcraft.yaml (the build config):
+   -  yalm
+  
+```
+name: my-hello-app  
+version: '1.0'  
+summary: A simple Python snap  
+description: Prints "Hello, Snap!"  
+base: core20  # Ubuntu 20.04 LTS base  
+confinement: strict  
+
+apps:  
+  hello:  
+    command: python3 src/hello.py  
+    plugs: []  
+
+parts:  
+  my-part:  
+    plugin: nil  
+    source: src  
+```
+   - Build the Snap:
+```
+snapcraft  
+```
+  - This generates my-hello-app_1.0_amd64.snap.
+
+### 3. Install & Run: 
+```
+sudo snap install --dangerous my-hello-app_1.0_amd64.snap  
+my-hello-app.hello  
+```
+### Screenshot:
+![alt text](snap1.png)
+
+![alt text](snapylm.png)
+
+
+
+# Thank you.
 
 
 
